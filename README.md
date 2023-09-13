@@ -329,11 +329,19 @@ instead we need to use: https://geth.ethereum.org/docs/interacting-with-geth/rpc
     -   You should have at least two accounts, either on the same peer, or on different peers.
     -   The sender must have enough balance to pay the transaction fee.
 -   From the previous tutorial, you should have an account in the first peer. This account should have sufficient amounts of “money” to send to another account, as long as the peer has mined some blocks. This is because the reward of mining a block is `2 ether`, which is `2e+18 wei`. `wei` is the smallest unit of "money" in Ethereum. Basically, `1 Ether = 1e+18 Wei`.
--   Now, you can create another account for the second peer in the console where the second peer is running by using
-    ```js
-    personal.newAccount();
+-   Now, you can create a keystore and another account for the first/second peer in the console where the second peer is running by using
+
+    ```shell
+    clef --keystore ethereum/peer1/keystore --configdir ethereum/peer1/clef --chainid=24601 
     ```
-    command. Typing in your password twice and do not forget it. Also, EECE571 is suggested to be your password. The new account has a 160 bit hexadecimal value in a pair of quotation marks, e.g., `"0x0123456789abcdef0123456789abcdef01234567"`
+
+    and then 
+
+    ```js
+    clef newaccount --keystore ethereum/peer1/keystore
+    ```
+     The new account has a 160 bit hexadecimal value in a pair of quotation marks, e.g., `"0x0123456789abcdef0123456789abcdef01234567"`
+
 -   Assume we want to transfer "money" from the first account on the first peer to the account on the second peer. For ease of presentation, we use `HASH_ACNT_1` to represent the address of the sender account with double quotes included, and use `HASH_ACNT_2` to represent the address of the receiver account with double quotes included.
 -   We now use the following command to send money from `HASH_ACNT_1` to `HASH_ACNT_2`
     ```js
@@ -368,18 +376,27 @@ instead we need to use: https://geth.ethereum.org/docs/interacting-with-geth/rpc
 -   In order to make the above steps work, we need to add `--allow-insecure-unlock` option when running the `peer1`. Now, terminate the running `peer1` and rerun it
 
     ```shell
-    geth --datadir "./ethereum/peer1" --networkid 24601 --port 12341 --http --http.port 9001 --authrpc.port 8551 --http.corsdomain "*" --ipcpath "./ethereum/peer1/geth1.ipc" --bootnodes "enode://bootnode-id@ip-address:0?discport=39999" --allow-insecure-unlock console
+    geth --datadir "./ethereum/peer1" --networkid 24601 --port 12341 --http --http.port 9001 --authrpc.port 8551 --http.corsdomain "*" --ipcpath "./ethereum/peer1/geth1.ipc" --bootnodes "enode://bootnode-id@ip-address:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console
     ```
+
+
+    geth --datadir "./ethereum/peer1" --networkid 24601 --port 12341 --http --http.port 9001 --authrpc.port 8551 --http.corsdomain "*" --ipcpath "./ethereum/peer1/geth1.ipc" --bootnodes "enode://a9aa44048fcda2540529a1bd2a0b4a33523df9b09b79255f98652fc1dad5075b6ebc77b3bbd12ec16c9237e9de2ff8bd62764099da0a5c2416a5b22b3ea34710@127.0.0.1:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console
+
+- Similarly for `peer2`
+
+   ```shell
+   
+   geth --datadir "ethereum/peer2" --networkid 24601 --port 12342 --http --http.port 9002 --authrpc.port 8552 --http.corsdomain "*" --ipcpath "ethereum/peer2/geth2.ipc" --bootnodes "enode://bootnode-id@ip-address:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console
+   ```
+
+   geth --datadir "ethereum/peer2" --networkid 24601 --port 12342 --http --http.port 9002 --authrpc.port 8552 --http.corsdomain "*" --ipcpath "ethereum/peer2/geth2.ipc" --bootnodes "enode://a9aa44048fcda2540529a1bd2a0b4a33523df9b09b79255f98652fc1dad5075b6ebc77b3bbd12ec16c9237e9de2ff8bd62764099da0a5c2416a5b22b3ea34710@127.0.0.1:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console
+
+- then, at each step calling/interacting with `eth.accounts` you need to approve it with clef.
 
 -   Please make sure there is no mining in the network. Then, repeat steps above, you will have the follows:
 
     ```js
-    > personal.unlockAccount(HASH_ACNT_1)
-    Unlock account 0x2974c433ad308226c24b9831c7a2ca511b990fd7
-    Passphrase:
-    true
-    > eth.sendTransaction({from : HASH_ACNT_1, to : HASH_ACNT_2, value : 1e+18})
-    "0x25e3befee9603c57d657e1541063f9787b372e82262273b36fa375d261318bb8"
+    eth.sendTransaction({from : HASH_ACNT_1, to : HASH_ACNT_2, value : 1e+18})
     ```
 
 -   The returned hash code is the transaction ID, we use `HASH_TRANS_1` to represent it with both double quotes included.
@@ -417,5 +434,6 @@ instead we need to use: https://geth.ethereum.org/docs/interacting-with-geth/rpc
 
     -   zwang@ece.ubc.ca (Original author)
     -   wus5353@gmail.com (Markdown version contributor)
+    -   taha.shabani.m@gmail.com (Markdown version contributor)
 
 -   In the next tutorial, we will learn how to deploy a smart contact in the blockchain and call the functions defined in the smart contract.
