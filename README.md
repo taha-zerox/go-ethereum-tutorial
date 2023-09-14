@@ -380,18 +380,15 @@ instead we need to use: https://geth.ethereum.org/docs/interacting-with-geth/rpc
 
 -   In order to make the above steps work, we need to add `--allow-insecure-unlock` option when running the `peer1`.
 
-#### Now: using `Clef`
+#### Alternative: Using `Clef`
 
 -   According to Clef, unlocking is no longer a feature: [unlocking accounts](https://geth.ethereum.org/docs/fundamentals/account-management#unlocking-accounts)
 
-Now, terminate the running `peer1` and rerun it
+-   Now, terminate the running `peer1` and rerun it
 
     ```shell
     geth --datadir "./ethereum/peer1" --networkid 24601 --port 12341 --http --http.port 9001 --authrpc.port 8551 --http.corsdomain "*" --ipcpath "./ethereum/peer1/geth1.ipc" --bootnodes "enode://bootnode-id@ip-address:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console
     ```
-
-
-    <!-- geth --datadir "./ethereum/peer1" --networkid 24601 --port 12341 --http --http.port 9001 --authrpc.port 8551 --http.corsdomain "*" --ipcpath "./ethereum/peer1/geth1.ipc" --bootnodes "enode://a9aa44048fcda2540529a1bd2a0b4a33523df9b09b79255f98652fc1dad5075b6ebc77b3bbd12ec16c9237e9de2ff8bd62764099da0a5c2416a5b22b3ea34710@127.0.0.1:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console -->
 
 -   Similarly for `peer2`
 
@@ -399,8 +396,6 @@ Now, terminate the running `peer1` and rerun it
 
     geth --datadir "ethereum/peer2" --networkid 24601 --port 12342 --http --http.port 9002 --authrpc.port 8552 --http.corsdomain "*" --ipcpath "ethereum/peer2/geth2.ipc" --bootnodes "enode://bootnode-id@ip-address:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console
     ```
-
-     <!-- geth --datadir "ethereum/peer2" --networkid 24601 --port 12342 --http --http.port 9002 --authrpc.port 8552 --http.corsdomain "*" --ipcpath "ethereum/peer2/geth2.ipc" --bootnodes "enode://a9aa44048fcda2540529a1bd2a0b4a33523df9b09b79255f98652fc1dad5075b6ebc77b3bbd12ec16c9237e9de2ff8bd62764099da0a5c2416a5b22b3ea34710@127.0.0.1:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console -->
 
 -   then, at each step calling/interacting with `eth.accounts` you need to approve it with clef.
 
