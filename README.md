@@ -119,6 +119,7 @@
 
 As `personal` has just been deprecated (Feb 23),
 instead we need to use: https://geth.ethereum.org/docs/interacting-with-geth/rpc/ns-personal#personalnewaccount
+
 -   Run command
 
     ```shell
@@ -129,11 +130,11 @@ instead we need to use: https://geth.ethereum.org/docs/interacting-with-geth/rpc
 -   Assume the command `clef newaccount ...` has been executed in the console of the first peer, now in the console we can call function
 
     ```js
-    miner.setEtherbase(eth.accounts[0])
+    miner.setEtherbase(eth.accounts[0]);
     ```
 
     and then
-    
+
     ```js
     miner.start(1);
     ```
@@ -242,7 +243,8 @@ instead we need to use: https://geth.ethereum.org/docs/interacting-with-geth/rpc
     ```shell
     npm install
     ```
-- In case you confront: <mark>npm install with error: gyp failed with exit code: 1</mark>: refer to this link: https://stackoverflow.com/questions/49348482/npm-install-with-error-gyp-failed-with-exit-code-1/70896127#70896127
+
+-   In case you confront: <mark>npm install with error: gyp failed with exit code: 1</mark>: refer to this link: https://stackoverflow.com/questions/49348482/npm-install-with-error-gyp-failed-with-exit-code-1/70896127#70896127
 -   In the cloned repo, find file /explorer/app/app.js and change `8545` in `line 9` to `9001`, which is the value of `--http.port` of your running peer1.
 -   Make sure you have done the first tutorial and have several blocks mined already in your private blockchain. Make sure your peer1 is also running in another terminal/console. Then, please run
 
@@ -332,15 +334,16 @@ instead we need to use: https://geth.ethereum.org/docs/interacting-with-geth/rpc
 -   Now, you can create a keystore and another account for the first/second peer in the console where the second peer is running by using
 
     ```shell
-    clef --keystore ethereum/peer1/keystore --configdir ethereum/peer1/clef --chainid=24601 
+    clef --keystore ethereum/peer1/keystore --configdir ethereum/peer1/clef --chainid=24601
     ```
 
-    and then 
+    and then
 
     ```js
     clef newaccount --keystore ethereum/peer1/keystore
     ```
-     The new account has a 160 bit hexadecimal value in a pair of quotation marks, e.g., `"0x0123456789abcdef0123456789abcdef01234567"`
+
+    The new account has a 160 bit hexadecimal value in a pair of quotation marks, e.g., `"0x0123456789abcdef0123456789abcdef01234567"`
 
 -   Assume we want to transfer "money" from the first account on the first peer to the account on the second peer. For ease of presentation, we use `HASH_ACNT_1` to represent the address of the sender account with double quotes included, and use `HASH_ACNT_2` to represent the address of the receiver account with double quotes included.
 -   We now use the following command to send money from `HASH_ACNT_1` to `HASH_ACNT_2`
@@ -359,6 +362,8 @@ instead we need to use: https://geth.ethereum.org/docs/interacting-with-geth/rpc
 
     This is because you have to first unlock the account `HASH_ACNT_1` before sending "money" out of it.
 
+#### Deprecated: Using `personal.unlockAccount`
+
 -   To unlock the account, you can run either of the two following commands in the console of first peer:
 
     ```js
@@ -373,30 +378,36 @@ instead we need to use: https://geth.ethereum.org/docs/interacting-with-geth/rpc
      at <eval>:1:24(3)
     ```
 
--   In order to make the above steps work, we need to add `--allow-insecure-unlock` option when running the `peer1`. Now, terminate the running `peer1` and rerun it
+-   In order to make the above steps work, we need to add `--allow-insecure-unlock` option when running the `peer1`.
+
+#### Now: using `Clef`
+
+-   According to Clef, unlocking is no longer a feature: [unlocking accounts](https://geth.ethereum.org/docs/fundamentals/account-management#unlocking-accounts)
+
+Now, terminate the running `peer1` and rerun it
 
     ```shell
     geth --datadir "./ethereum/peer1" --networkid 24601 --port 12341 --http --http.port 9001 --authrpc.port 8551 --http.corsdomain "*" --ipcpath "./ethereum/peer1/geth1.ipc" --bootnodes "enode://bootnode-id@ip-address:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console
     ```
 
 
-    geth --datadir "./ethereum/peer1" --networkid 24601 --port 12341 --http --http.port 9001 --authrpc.port 8551 --http.corsdomain "*" --ipcpath "./ethereum/peer1/geth1.ipc" --bootnodes "enode://a9aa44048fcda2540529a1bd2a0b4a33523df9b09b79255f98652fc1dad5075b6ebc77b3bbd12ec16c9237e9de2ff8bd62764099da0a5c2416a5b22b3ea34710@127.0.0.1:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console
+    <!-- geth --datadir "./ethereum/peer1" --networkid 24601 --port 12341 --http --http.port 9001 --authrpc.port 8551 --http.corsdomain "*" --ipcpath "./ethereum/peer1/geth1.ipc" --bootnodes "enode://a9aa44048fcda2540529a1bd2a0b4a33523df9b09b79255f98652fc1dad5075b6ebc77b3bbd12ec16c9237e9de2ff8bd62764099da0a5c2416a5b22b3ea34710@127.0.0.1:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console -->
 
-- Similarly for `peer2`
+-   Similarly for `peer2`
 
-   ```shell
-   
-   geth --datadir "ethereum/peer2" --networkid 24601 --port 12342 --http --http.port 9002 --authrpc.port 8552 --http.corsdomain "*" --ipcpath "ethereum/peer2/geth2.ipc" --bootnodes "enode://bootnode-id@ip-address:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console
-   ```
+    ```shell
 
-   geth --datadir "ethereum/peer2" --networkid 24601 --port 12342 --http --http.port 9002 --authrpc.port 8552 --http.corsdomain "*" --ipcpath "ethereum/peer2/geth2.ipc" --bootnodes "enode://a9aa44048fcda2540529a1bd2a0b4a33523df9b09b79255f98652fc1dad5075b6ebc77b3bbd12ec16c9237e9de2ff8bd62764099da0a5c2416a5b22b3ea34710@127.0.0.1:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console
+    geth --datadir "ethereum/peer2" --networkid 24601 --port 12342 --http --http.port 9002 --authrpc.port 8552 --http.corsdomain "*" --ipcpath "ethereum/peer2/geth2.ipc" --bootnodes "enode://bootnode-id@ip-address:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console
+    ```
 
-- then, at each step calling/interacting with `eth.accounts` you need to approve it with clef.
+     <!-- geth --datadir "ethereum/peer2" --networkid 24601 --port 12342 --http --http.port 9002 --authrpc.port 8552 --http.corsdomain "*" --ipcpath "ethereum/peer2/geth2.ipc" --bootnodes "enode://a9aa44048fcda2540529a1bd2a0b4a33523df9b09b79255f98652fc1dad5075b6ebc77b3bbd12ec16c9237e9de2ff8bd62764099da0a5c2416a5b22b3ea34710@127.0.0.1:0?discport=39999" --signer=ethereum/peer1/clef/clef.ipc console -->
+
+-   then, at each step calling/interacting with `eth.accounts` you need to approve it with clef.
 
 -   Please make sure there is no mining in the network. Then, repeat steps above, you will have the follows:
 
     ```js
-    eth.sendTransaction({from : HASH_ACNT_1, to : HASH_ACNT_2, value : 1e+18})
+    eth.sendTransaction({ from: HASH_ACNT_1, to: HASH_ACNT_2, value: 1e18 });
     ```
 
 -   The returned hash code is the transaction ID, we use `HASH_TRANS_1` to represent it with both double quotes included.
