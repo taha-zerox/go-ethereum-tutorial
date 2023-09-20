@@ -73,7 +73,7 @@ mkdir geth-tutorial
 And then: 
 
 ```shell
-openssl rand -hex 32 | tr -d "\n" | sudo tee geth-tutorial/jwtsecret
+sudo openssl rand -hex 32 | tr -d "\n" | sudo tee geth-tutorial/jwtsecret
 ```
 
 ### step 1: Generating accounts
@@ -104,12 +104,22 @@ The final argument passed to Geth is the --http flag.This enables the http-rpc s
 The following command should be run in a new terminal, separate to the one running Clef:
 
 ```shell
+geth --sepolia --syncmode light --datadir geth-tutorial --authrpc.addr localhost --authrpc.port 8551 --authrpc.vhosts localhost --authrpc.jwtsecret geth-tutorial/jwtsecret --http --http.api eth,net --signer=geth-tutorial/clef/clef.ipc --http
+```
+
+In case you want to run a full node (snap), use the following command:
+
+```shell
 geth --sepolia --datadir geth-tutorial --authrpc.addr localhost --authrpc.port 8551 --authrpc.vhosts localhost --authrpc.jwtsecret geth-tutorial/jwtsecret --http --http.api eth,net --signer=geth-tutorial/clef/clef.ipc --http
 ```
+> Causion: Creating a full node requires a large amount of storage (~200GB)
 
 ### Step 3.2: Start Lighthouse
 
-In this step, we will set up a beacon node. Use the following command to start a beacon node that connects to the execution node:
+>Note
+>Geth light clients **do not currently work** on proof-of-stake Ethereum. New light clients that work with the proof-of-stake consensus engine are expected to ship soon!
+
+>In this step, we will set up a beacon node. Use the following command to start a beacon node that connects to the execution node:
 
 ```shell
 lighthouse bn \
@@ -130,6 +140,7 @@ lighthouse bn \
 > - lighthouse --network gnosis: Gnosis chain.
 
 <mark>**Do we have any option for a private network?**</mark>
+No, but in order to reduce storage consumption we can use a light node instead of a full node.
 
 > Note:
 > Public endpoints: https://eth-clients.github.io/checkpoint-sync-endpoints/
