@@ -138,3 +138,14 @@ lighthouse bn \
 
 https://sepoliafaucet.com/
 
+
+### Challenges & Questions
+
+- How would we be able to run the nodes on the mainnet (layer-1) or layer-2 networks?
+
+- How to responde to event driven system?
+
+- How to support real-time actions?
+
+
+

@@ -7,3 +7,4 @@ enode*/
 audit.log
 bootnode.key
 geth-tutorial
+.DS_Store
